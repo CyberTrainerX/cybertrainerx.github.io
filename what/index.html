@@ -1,1 +1,47 @@
-<title>Rick Roll!</title>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick Roll!</title>
+    <style>
+        body {
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: monospace;
+        }
+        .player-container {
+            background: #000000;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            max-width: 800px;
+            width: 100%;
+        }
+        video {
+            width: 100%;
+            border-radius: 8px;
+            background: #000;
+        }
+        .caption {
+            color: #000000;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <video controls autoplay>
+            <source src="leakedMaterials.mp4" type="video/mp4">
+            No videos.
+        </video>
+        <div class="caption">Rick Roll!</div>
+    </div>
+</body>
+</html>
