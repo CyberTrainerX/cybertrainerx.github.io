@@ -3,49 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音乐</title>
+    <title>Music</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0c10;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #c0c5ce;
-            padding: 40px 20px;
-            max-width: 600px;
-            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: #141a20;
+            padding: 30px 25px;
+            border-radius: 16px;
+            border: 1px solid #2a343e;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
         h1 {
-            border-bottom: 1px solid #2c3e44;
-            padding-bottom: 10px;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #e0e6ed;
+            margin-bottom: 6px;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            padding: 10px 0;
+        .sub {
+            color: #6c8b9b;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
             border-bottom: 1px solid #1e242a;
+            padding-bottom: 15px;
         }
-        a {
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .file-item {
+            background: #1c2630;
+            border-radius: 8px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .file-item:hover { background: #26323e; }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+        .file-icon { font-size: 1.2rem; }
+        .file-name {
+            color: #e0e6ed;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+        .play-btn {
+            background: #1e6e8c;
+            color: white;
+            border: none;
+            padding: 5px 16px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: background 0.2s;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .play-btn:hover { background: #2a8aaa; }
+        .empty {
+            text-align: center;
+            color: #6c8b9b;
+            padding: 20px 0;
+        }
+        .footer {
+            font-size: 0.75rem;
+            color: #4a5a6a;
+            border-top: 1px solid #1e242a;
+            padding-top: 15px;
+            text-align: center;
+        }
+        .footer a {
             color: #66b8ff;
             text-decoration: none;
-            font-size: 1.1rem;
         }
-        a:hover {
-            text-decoration: underline;
-        }
-        .note {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: #6c8b9b;
-        }
+        .footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <h1>🎵 音乐列表</h1>
-    <ul>
-        <li><a href="player.html?file=Schoolhouse%20Trouble%21.mp3">Schoolhouse Trouble!</a></li>
-        <!-- music there! -->
-    </ul>
-    <div class="note">📌 点击文件名即可播放（支持音频/视频）</div>
+    <div class="container">
+        <h1>🎵 Music List</h1>
+        <div class="sub">Click to play · supported Audio/Video</div>
+        <div class="file-list" id="fileList">
+            <div class="empty">⏳ Loading...</div>
+        </div>
+        <div class="footer">
+            <a href="/">🏠 Home</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        fetch('files.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Bad List!');
+                return res.json();
+            })
+            .then(files => {
+                const container = document.getElementById('fileList');
+                if (!files || files.length === 0) {
+                    container.innerHTML = '<div class="empty">🎵 There are empty!</div>';
+                    return;
+                }
+                let html = '';
+                files.forEach(file => {
+                    const encoded = encodeURIComponent(file.name);
+                    html += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <span class="file-icon">🎶</span>
+                                <span class="file-name">${file.name}</span>
+                            </div>
+                            <a href="player.html?file=${encoded}" class="play-btn">▶ play</a>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            })
+            .catch(err => {
+                document.getElementById('fileList').innerHTML = `<div class="empty">❌ Failed to load：${err.message}</div>`;
+                console.error(err);
+            });
+    </script>
 </body>
 </html>
