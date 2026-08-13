@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>下载站 · CyberTrainerX</title>
+    <title>Downloads · CyberTrainerX</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -64,7 +64,7 @@
             gap: 10px;
             overflow: hidden;
         }
-        .file-icon { font-size: 1.2rem; }
+        .file-icon { font-size: 1.4rem; width: 2rem; text-align: center; }
         .file-name {
             color: #e0e6ed;
             font-family: 'Courier New', monospace;
@@ -110,47 +110,92 @@
 </head>
 <body>
     <div class="container">
-        <h1>📦 下载站</h1>
-        <div class="sub">存放在 resources/ 目录下的文件</div>
+        <h1>📦 Downloads</h1>
+        <div class="sub">Files stored in the <code>resources/</code> folder</div>
         <div class="file-list" id="fileList">
-            <div class="empty">⏳ 加载中...</div>
+            <div class="empty">⏳ Loading...</div>
         </div>
         <div class="footer">
-            <a href="/">🏠 首页</a> · 
+            <a href="/">🏠 Home</a> · 
             <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
         </div>
     </div>
 
     <script>
+        // ---- Icon mapping ----
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const map = {
+                // Documents
+                'doc': '📄', 'docx': '📄', 'pdf': '📄', 'txt': '📄',
+                'rtf': '📄', 'odt': '📄', 'xls': '📄', 'xlsx': '📄',
+                'ppt': '📄', 'pptx': '📄', 'md': '📄',
+                // Archives
+                'zip': '📦', 'rar': '📦', '7z': '📦',
+                'tar': '📚', 'gz': '📚', 'bz2': '📚', 'xz': '📚',
+                // Code / Scripts
+                'js': '⌨️', 'py': '⌨️', 'html': '⌨️', 'css': '⌨️',
+                'java': '⌨️', 'c': '⌨️', 'cpp': '⌨️', 'sh': '⌨️',
+                'bat': '⌨️', 'rb': '⌨️', 'go': '⌨️', 'rs': '⌨️',
+                'php': '⌨️', 'swift': '⌨️', 'kt': '⌨️', 'ts': '⌨️',
+                // Backups / Disk images
+                'iso': '💾', 'img': '💾', 'bin': '💾', 'dmg': '💾',
+                'vhd': '💾', 'vmdk': '💾', 'pkg': '💾',
+                // Data / uncategorized
+                'csv': '📂', 'json': '📂', 'xml': '📂', 'sql': '📂',
+                'db': '📂', 'dat': '📂', 'log': '📂', 'yaml': '📂',
+                // Firmware / ROMs
+                'rom': '📀', 'firmware': '📠', 'fw': '📠',
+                // Audio
+                'mp3': '🎙', 'wav': '🎙', 'aac': '🎙', 'flac': '🎙',
+                'm4a': '🎙', 'ogg': '🎙', 'wma': '🎙', 'aiff': '🎙',
+                // Video
+                'mp4': '🎞', 'avi': '🎞', 'webm': '🎞',
+                'mkv': '🎥', 'mov': '🎥', 'wmv': '🎥',
+                'flv': '📽', '3gp': '📹', 'm4v': '🎞',
+                'wtv': '📺',
+                // Images
+                'jpg': '🌅', 'jpeg': '🌅', 'png': '🌅', 'gif': '🌅',
+                'bmp': '🌅', 'tiff': '🌅', 'webp': '🌅',
+                'psd': '📲', 'ai': '📲', 'eps': '📲',
+                // Executables
+                'exe': '🖥', 'msi': '📦', 'apk': '📱',
+                'app': '📱', 'deb': '📦', 'rpm': '📦',
+            };
+            return map[ext] || '📄';
+        }
+
+        // ---- Fetch and render ----
         fetch('files.json')
             .then(res => {
-                if (!res.ok) throw new Error('文件列表加载失败');
+                if (!res.ok) throw new Error('Failed to load file list');
                 return res.json();
             })
             .then(files => {
                 const container = document.getElementById('fileList');
                 if (!files || files.length === 0) {
-                    container.innerHTML = '<div class="empty">📭 暂无文件可下载</div>';
+                    container.innerHTML = '<div class="empty">📭 No files available</div>';
                     return;
                 }
                 let html = '';
                 files.forEach(file => {
                     const encoded = encodeURIComponent(file.name);
+                    const icon = getFileIcon(file.name);
                     html += `
                         <div class="file-item">
                             <div class="file-info">
-                                <span class="file-icon">📄</span>
+                                <span class="file-icon">${icon}</span>
                                 <span class="file-name">${file.name}</span>
                                 <span class="file-size">${file.size || ''}</span>
                             </div>
-                            <a href="resources/${encoded}" class="download-btn" download>⬇ 下载</a>
+                            <a href="resources/${encoded}" class="download-btn" download>⬇ Download</a>
                         </div>
                     `;
                 });
                 container.innerHTML = html;
             })
             .catch(err => {
-                document.getElementById('fileList').innerHTML = `<div class="empty">❌ 加载失败：${err.message}</div>`;
+                document.getElementById('fileList').innerHTML = `<div class="empty">❌ Error: ${err.message}</div>`;
                 console.error(err);
             });
     </script>
