@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #c0c5ce;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #141a20;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #2a343e;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        h2 {
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #e0e6ed;
+            font-size: 1.5rem;
+        }
+        .player-wrapper {
+            background: #1c2630;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        audio, video {
+            width: 100%;
+            border-radius: 6px;
+            background: #000;
+            display: block;
+        }
+        .file-name {
+            font-size: 1rem;
+            color: #8a9ba8;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #66b8ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .error-msg {
+            color: #ff6b6b;
+            padding: 15px;
+            background: #2a1a1a;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .debug {
+            font-size: 0.8rem;
+            color: #6c8b9b;
+            margin-top: 10px;
+            border-top: 1px solid #1e242a;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎵 Now Playing</h2>
+        <div id="playerArea">
+            <!-- 动态生成播放器 -->
+        </div>
+        <a href="index.html" class="back-link">← Back to list</a>
+        <div class="debug" id="debugInfo"></div>
+    </div>
+
+    <script>
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const fileName = params.get('file');
+
+            const playerArea = document.getElementById('playerArea');
+            const debug = document.getElementById('debugInfo');
+
+            if (!fileName) {
+                playerArea.innerHTML = `<div class="error-msg">⚠️ No file specified.</div>`;
+                debug.textContent = 'Please use ?file=filename';
+                return;
+            }
+
+            const decodedName = decodeURIComponent(fileName);
+            debug.textContent = `Requested: ${decodedName}`;
+
+            const ext = decodedName.split('.').pop().toLowerCase();
+            const isVideo = ['mp4', 'webm', 'ogg', 'mov', 'mkv'].includes(ext);
+            const isAudio = ['mp3', 'wav', 'aac', 'flac', 'm4a', 'wma'].includes(ext);
+
+            if (!isVideo && !isAudio) {
+                playerArea.innerHTML = `<div class="error-msg">❌ Unsupported file format: ${ext}</div>`;
+                return;
+            }
+
+            const filePath = `resources/${encodeURIComponent(decodedName)}`;
+            debug.textContent += ` → Path: ${filePath}`;
+
+            const tag = isVideo ? 'video' : 'audio';
+            const mimeType = isVideo ? `video/${ext}` : `audio/${ext}`;
+
+            const playerHTML = `
+                <div class="player-wrapper">
+                    <div class="file-name">${decodedName}</div>
+                    <${tag} id="mediaPlayer" controls autoplay playsinline preload="metadata">
+                        <source src="${filePath}" type="${mimeType}">
+                        Your browser does not support the ${tag} element.
+                    </${tag}>
+                </div>
+            `;
+            playerArea.innerHTML = playerHTML;
+
+            const media = document.getElementById('mediaPlayer');
+            if (media) {
+                media.addEventListener('error', function(e) {
+                    const errorMsg = media.error ? media.error.message : 'Unknown error';
+                    debug.textContent += ` ❌ Load error: ${errorMsg}`;
+                });
+                media.addEventListener('loadeddata', function() {
+                    debug.textContent += ' ✅ Loaded successfully';
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
