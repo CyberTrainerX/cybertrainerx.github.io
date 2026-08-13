@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>播放器</title>
+    <style>
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', sans-serif;
+            color: #c0c5ce;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .player-box {
+            background: #1a1e24;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+        video, audio {
+            width: 100%;
+            border-radius: 8px;
+            background: #000;
+        }
+        .file-name {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: #8a9ba8;
+        }
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #66b8ff;
+            text-decoration: none;
+        }
+        .back:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #ff6b6b;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="player-box">
+        <div id="playerContainer">
+            <!-- 由 JavaScript 动态生成 -->
+        </div>
+        <div class="file-name" id="fileName"></div>
+        <a href="index.html" class="back">← 返回列表</a>
+    </div>
+
+    <script>
+        // 从 URL 获取文件名参数
+        const params = new URLSearchParams(window.location.search);
+        const file = params.get('file');
+
+        const container = document.getElementById('playerContainer');
+        const nameDisplay = document.getElementById('fileName');
+
+        if (!file) {
+            container.innerHTML = '<div class="error">未指定文件</div>';
+            nameDisplay.textContent = '无效请求';
+        } else {
+            // 判断文件类型，使用 video 或 audio 标签
+            const ext = file.split('.').pop().toLowerCase();
+            const isVideo = ['mp4', 'webm', 'ogg'].includes(ext);
+            const isAudio = ['mp3', 'wav', 'aac', 'flac'].includes(ext);
+
+            if (!isVideo && !isAudio) {
+                container.innerHTML = '<div class="error">不支持的文件格式</div>';
+                nameDisplay.textContent = file;
+            } else {
+                const tag = isVideo ? 'video' : 'audio';
+                container.innerHTML = `
+                    <${tag} controls autoplay>
+                        <source src="${encodeURIComponent(file)}" type="${isVideo ? 'video/'+ext : 'audio/'+ext}">
+                        您的浏览器不支持此播放器。
+                    </${tag}>
+                `;
+                nameDisplay.textContent = `正在播放：${file}`;
+            }
+        }
+    </script>
+</body>
+</html>
