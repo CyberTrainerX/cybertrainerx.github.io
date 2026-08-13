@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberTrainerX · 主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #c0c5ce;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #141a20;
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid #2a343e;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #e0e6ed;
+            margin-bottom: 8px;
+        }
+        .sub {
+            color: #6c8b9b;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #1e242a;
+            padding-bottom: 20px;
+        }
+        .nav-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .nav-item {
+            background: #1c2630;
+            border-radius: 10px;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: #c0c5ce;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s, transform 0.1s;
+            border: 1px solid transparent;
+        }
+        .nav-item:hover {
+            background: #26323e;
+            border-color: #3e5060;
+            transform: scale(1.01);
+        }
+        .nav-item .label {
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        .nav-item .icon {
+            font-size: 1.4rem;
+            margin-right: 12px;
+        }
+        .nav-item .arrow {
+            color: #6c8b9b;
+            font-size: 1.2rem;
+        }
+        .footer {
+            font-size: 0.75rem;
+            color: #4a5a6a;
+            border-top: 1px solid #1e242a;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+        .footer a {
+            color: #66b8ff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CyberTrainerX</h1>
+        <div class="sub">⚡ 内部工具集 · 谨慎访问 ⚡</div>
+
+        <div class="nav-grid">
+            <!-- “❓ 什么” 指向 what 目录 -->
+            <a href="/what/" class="nav-item">
+                <span><span class="icon">❓</span><span class="label">什么</span></span>
+                <span class="arrow">→</span>
+            </a>
+            <a href="/music/" class="nav-item">
+                <span><span class="icon">🎵</span><span class="label">音乐库</span></span>
+                <span class="arrow">→</span>
+            </a>
+            <a href="/downloads/" class="nav-item">
+                <span><span class="icon">📦</span><span class="label">下载站</span></span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <a href="/">🏠 首页</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+</body>
+</html>
