@@ -1,1 +1,158 @@
-Coming soon!
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载站 · CyberTrainerX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #c0c5ce;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: #141a20;
+            padding: 30px 25px;
+            border-radius: 16px;
+            border: 1px solid #2a343e;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #e0e6ed;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sub {
+            color: #6c8b9b;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #1e242a;
+            padding-bottom: 15px;
+        }
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .file-item {
+            background: #1c2630;
+            border-radius: 8px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .file-item:hover { background: #26323e; }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+        .file-icon { font-size: 1.2rem; }
+        .file-name {
+            color: #e0e6ed;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+        .file-size {
+            color: #6c8b9b;
+            font-size: 0.8rem;
+            margin-left: 6px;
+        }
+        .download-btn {
+            background: #1e7e34;
+            color: white;
+            border: none;
+            padding: 5px 16px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: background 0.2s;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .download-btn:hover { background: #2a9c46; }
+        .empty {
+            text-align: center;
+            color: #6c8b9b;
+            padding: 20px 0;
+        }
+        .footer {
+            font-size: 0.75rem;
+            color: #4a5a6a;
+            border-top: 1px solid #1e242a;
+            padding-top: 15px;
+            text-align: center;
+        }
+        .footer a {
+            color: #66b8ff;
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 下载站</h1>
+        <div class="sub">存放在 resources/ 目录下的文件</div>
+        <div class="file-list" id="fileList">
+            <div class="empty">⏳ 加载中...</div>
+        </div>
+        <div class="footer">
+            <a href="/">🏠 首页</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        fetch('files.json')
+            .then(res => {
+                if (!res.ok) throw new Error('文件列表加载失败');
+                return res.json();
+            })
+            .then(files => {
+                const container = document.getElementById('fileList');
+                if (!files || files.length === 0) {
+                    container.innerHTML = '<div class="empty">📭 暂无文件可下载</div>';
+                    return;
+                }
+                let html = '';
+                files.forEach(file => {
+                    const encoded = encodeURIComponent(file.name);
+                    html += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <span class="file-icon">📄</span>
+                                <span class="file-name">${file.name}</span>
+                                <span class="file-size">${file.size || ''}</span>
+                            </div>
+                            <a href="resources/${encoded}" class="download-btn" download>⬇ 下载</a>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            })
+            .catch(err => {
+                document.getElementById('fileList').innerHTML = `<div class="empty">❌ 加载失败：${err.message}</div>`;
+                console.error(err);
+            });
+    </script>
+</body>
+</html>
