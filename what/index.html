@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rick Roll!</title>
     <style>
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #000000;
+            background: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,31 +21,47 @@
             font-family: monospace;
         }
         .player-container {
-            background: #000000;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            max-width: 800px;
-            width: 100%;
+            background: #ffffff; /* 白底 */
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
         }
         video {
             width: 100%;
-            border-radius: 8px;
-            background: #000;
+            height: 100%;
+            object-fit: contain;
+            background: #ffffff;
+            display: block;
         }
+
         .caption {
-            color: #000000;
+            color: #888888;
             text-align: center;
             margin-top: 12px;
             font-size: 0.9rem;
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 6px 12px;
+            width: fit-content;
+            margin: 0 auto;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body>
     <div class="player-container">
-        <video controls autoplay>
+        <video controls autoplay playsinline preload="metadata">
             <source src="leakedMaterials.mp4" type="video/mp4">
-            No videos.
+            Cannot Play the video, maybe the browser unsupported.
         </video>
         <div class="caption">Rick Roll!</div>
     </div>
