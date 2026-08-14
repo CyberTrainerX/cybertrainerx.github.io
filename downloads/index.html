@@ -5,114 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download Site</title>
     <style>
+        /* 样式保持不变，略 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #0a0c10;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #c0c5ce;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 700px;
-            width: 100%;
-            background: #141a20;
-            padding: 30px 25px;
-            border-radius: 16px;
-            border: 1px solid #2a343e;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        }
-        h1 {
-            font-size: 2rem;
-            font-weight: 300;
-            letter-spacing: 1px;
-            color: #e0e6ed;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .sub {
-            color: #6c8b9b;
-            font-size: 0.9rem;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #1e242a;
-            padding-bottom: 15px;
-        }
-        .file-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .file-item {
-            background: #1c2630;
-            border-radius: 8px;
-            padding: 12px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
+        body { background: #0a0c10; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #c0c5ce; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { max-width: 700px; width: 100%; background: #141a20; padding: 30px 25px; border-radius: 16px; border: 1px solid #2a343e; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        h1 { font-size: 2rem; font-weight: 300; letter-spacing: 1px; color: #e0e6ed; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+        .sub { color: #6c8b9b; font-size: 0.9rem; margin-bottom: 25px; border-bottom: 1px solid #1e242a; padding-bottom: 15px; }
+        .file-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
+        .file-item { background: #1c2630; border-radius: 8px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
         .file-item:hover { background: #26323e; }
-        .file-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow: hidden;
-        }
+        .file-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
         .file-icon { font-size: 1.4rem; width: 2rem; text-align: center; }
-        .file-name {
-            color: #e0e6ed;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95rem;
-            word-break: break-all;
-        }
-        .file-size {
-            color: #6c8b9b;
-            font-size: 0.8rem;
-            margin-left: 6px;
-        }
-        .download-btn {
-            background: #1e7e34;
-            color: white;
-            border: none;
-            padding: 5px 16px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: background 0.2s;
-            white-space: nowrap;
-            margin-left: 10px;
-        }
+        .file-name { color: #e0e6ed; font-family: 'Courier New', monospace; font-size: 0.95rem; word-break: break-all; }
+        .file-size { color: #6c8b9b; font-size: 0.8rem; margin-left: 6px; }
+        .download-btn { background: #1e7e34; color: white; border: none; padding: 5px 16px; border-radius: 4px; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; white-space: nowrap; margin-left: 10px; }
         .download-btn:hover { background: #2a9c46; }
-        .empty {
-            text-align: center;
-            color: #6c8b9b;
-            padding: 20px 0;
-        }
-        .footer {
-            font-size: 0.75rem;
-            color: #4a5a6a;
-            border-top: 1px solid #1e242a;
-            padding-top: 15px;
-            text-align: center;
-        }
-        .footer a {
-            color: #66b8ff;
-            text-decoration: none;
-        }
+        .download-btn.external { background: #1e6e8c; }
+        .download-btn.external:hover { background: #2a8aaa; }
+        .empty { text-align: center; color: #6c8b9b; padding: 20px 0; }
+        .footer { font-size: 0.75rem; color: #4a5a6a; border-top: 1px solid #1e242a; padding-top: 15px; text-align: center; }
+        .footer a { color: #66b8ff; text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
-        .error-box {
-            color: #ff6b6b;
-            background: #2a1a1a;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 10px 0;
-        }
+        .error-box { color: #ff6b6b; background: #2a1a1a; padding: 15px; border-radius: 6px; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -133,46 +47,67 @@
         function getFileIcon(filename) {
             const ext = filename.split('.').pop().toLowerCase();
             const map = {
-                // Documents
                 'doc': '📄', 'docx': '📄', 'pdf': '📄', 'txt': '📄',
                 'rtf': '📄', 'odt': '📄', 'xls': '📄', 'xlsx': '📄',
                 'ppt': '📄', 'pptx': '📄', 'md': '📄',
-                // Archives
                 'zip': '📦', 'rar': '📦', '7z': '📦',
                 'tar': '📚', 'gz': '📚', 'bz2': '📚', 'xz': '📚',
-                // Code / Scripts
                 'js': '⌨️', 'py': '⌨️', 'html': '⌨️', 'css': '⌨️',
                 'java': '⌨️', 'c': '⌨️', 'cpp': '⌨️', 'sh': '⌨️',
                 'bat': '⌨️', 'rb': '⌨️', 'go': '⌨️', 'rs': '⌨️',
                 'php': '⌨️', 'swift': '⌨️', 'kt': '⌨️', 'ts': '⌨️',
-                // Backups / Disk images
                 'iso': '💾', 'img': '💾', 'bin': '💾', 'dmg': '💾',
                 'vhd': '💾', 'vmdk': '💾', 'pkg': '💾',
-                // Data / uncategorized
                 'csv': '📂', 'json': '📂', 'xml': '📂', 'sql': '📂',
                 'db': '📂', 'dat': '📂', 'log': '📂', 'yaml': '📂',
-                // Firmware / ROMs
                 'rom': '📀', 'firmware': '📠', 'fw': '📠',
-                // Audio
                 'mp3': '🎙', 'wav': '🎙', 'aac': '🎙', 'flac': '🎙',
                 'm4a': '🎙', 'ogg': '🎙', 'wma': '🎙', 'aiff': '🎙',
-                // Video
                 'mp4': '🎞', 'avi': '🎞', 'webm': '🎞',
                 'mkv': '🎥', 'mov': '🎥', 'wmv': '🎥',
                 'flv': '📽', '3gp': '📹', 'm4v': '🎞',
                 'wtv': '📺',
-                // Images
                 'jpg': '🌅', 'jpeg': '🌅', 'png': '🌅', 'gif': '🌅',
-                'bmp': '🌅', 'tiff': '🌅', 'webp': '🌅', 'ico': '🌅',  // ← 这里补了逗号
+                'bmp': '🌅', 'tiff': '🌅', 'webp': '🌅', 'ico': '🌅',
                 'psd': '📲', 'ai': '📲', 'eps': '📲',
-                // Executables
                 'exe': '🖥', 'msi': '📦', 'apk': '📱',
                 'app': '📱', 'deb': '📦', 'rpm': '📦',
             };
             return map[ext] || '📂';
         }
 
-        // ---- Fetch and render (with timeout) ----
+        // ---- 判断是否为外链 ----
+        function isExternalLink(source) {
+            return source && (source.startsWith('http://') || source.startsWith('https://'));
+        }
+
+        // ---- 构建下载链接 ----
+        function buildDownloadLink(file) {
+            const source = file.source || 'resources/';
+            
+            if (isExternalLink(source)) {
+                // 外链：跳转，不加 download
+                return {
+                    href: source,
+                    target: '_blank',
+                    download: false,
+                    isExternal: true
+                };
+            } else {
+                // 站内路径：拼接并下载
+                const encodedName = encodeURIComponent(file.name);
+                // 确保路径以 / 结尾，避免拼接成 "docsfile.txt"
+                const baseDir = source.endsWith('/') ? source : source + '/';
+                return {
+                    href: `${baseDir}${encodedName}`,
+                    target: '_self',
+                    download: true,
+                    isExternal: false
+                };
+            }
+        }
+
+        // ---- Fetch and render ----
         const container = document.getElementById('fileList');
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 8000);
@@ -190,11 +125,11 @@
                 }
                 let html = '';
                 files.forEach(file => {
-                    const encoded = encodeURIComponent(file.name);
                     const icon = getFileIcon(file.name);
-                    // 支持外链
-                    const link = file.link ? file.link : `resources/${encoded}`;
-                    const target = file.link ? ' target="_blank"' : '';
+                    const linkInfo = buildDownloadLink(file);
+                    const downloadAttr = linkInfo.download ? 'download' : '';
+                    const targetAttr = linkInfo.target ? `target="${linkInfo.target}"` : '';
+                    const externalClass = linkInfo.isExternal ? 'external' : '';
                     html += `
                         <div class="file-item">
                             <div class="file-info">
@@ -202,7 +137,7 @@
                                 <span class="file-name">${file.name}</span>
                                 <span class="file-size">${file.size || ''}</span>
                             </div>
-                            <a href="${link}" class="download-btn" download${target}>⬇ Download</a>
+                            <a href="${linkInfo.href}" class="download-btn ${externalClass}" ${downloadAttr} ${targetAttr}>⬇ Download</a>
                         </div>
                     `;
                 });
