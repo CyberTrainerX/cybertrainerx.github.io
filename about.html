@@ -1,1 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #c0c5ce;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 720px;
+            width: 100%;
+            background: #141a20;
+            padding: 35px 30px;
+            border-radius: 16px;
+            border: 1px solid #2a343e;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #e0e6ed;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sub {
+            color: #6c8b9b;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #1e242a;
+            padding-bottom: 15px;
+        }
+        section {
+            margin-bottom: 28px;
+        }
+        section h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #e0e6ed;
+            margin-bottom: 12px;
+            border-left: 3px solid #66b8ff;
+            padding-left: 12px;
+        }
+        section p {
+            line-height: 1.7;
+            color: #aab5c0;
+            font-size: 0.95rem;
+        }
+        .friend-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .friend-item {
+            background: #1c2630;
+            padding: 10px 16px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .friend-item:hover {
+            background: #26323e;
+        }
+        .friend-item span {
+            font-size: 0.95rem;
+        }
+        .friend-item a {
+            color: #66b8ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .friend-item a:hover {
+            text-decoration: underline;
+        }
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        .link-card {
+            background: #1c2630;
+            padding: 12px 10px;
+            border-radius: 8px;
+            text-align: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .link-card:hover {
+            background: #26323e;
+            transform: scale(1.02);
+        }
+        .link-card a {
+            color: #66b8ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            font-size: 0.75rem;
+            color: #4a5a6a;
+            border-top: 1px solid #1e242a;
+            padding-top: 15px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .footer a {
+            color: #66b8ff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 About</h1>
+        <div class="sub">CyberTrainerX · Personal Site</div>
 
+        <!-- About Me -->
+        <section>
+            <h2>📌 About Me</h2>
+            <p>
+                Hi, I'm CyberTrainerX.<br>
+                Cybersecurity enthusiast / Indie developer / Tinkerer.<br>
+                This site is my digital playground — a place for experiments, Easter eggs, and handy tools.<br>
+                Feel free to look around if you find something interesting.
+            </p>
+        </section>
+
+        <!-- Friends -->
+        <section>
+            <h2>🔗 Friends</h2>
+            <div class="friend-list">
+                <div class="friend-item">
+                    <span>🛡️ MCEDGE</span>
+                    <a href="https://mcedge.github.io/" target="_blank">Visit →</a>
+                </div>
+                <div class="friend-item">
+                    <span>⚠️ Suspicious Clipboard</span>
+                    <a href="https://mcedge.github.io/susp-clipboard/" target="_blank">Visit →</a>
+                </div>
+                <div class="friend-item">
+                    <span>📦 Update Patch</span>
+                    <a href="https://mcedge.github.io/susp-clipboard/update" target="_blank">Visit →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section>
+            <h2>🧰 Resources</h2>
+            <div class="link-grid">
+                <div class="link-card"><a href="https://github.com/" target="_blank">GitHub</a></div>
+                <div class="link-card"><a href="https://stackoverflow.com/" target="_blank">Stack Overflow</a></div>
+                <div class="link-card"><a href="https://www.bilibili.com/" target="_blank">Bilibili</a></div>
+                <div class="link-card"><a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a></div>
+                <div class="link-card"><a href="https://www.cloudflare.com/" target="_blank">Cloudflare</a></div>
+                <div class="link-card"><a href="https://www.google.com/" target="_blank">Google</a></div>
+            </div>
+        </section>
+
+        <div class="footer">
+            <a href="/">🏠 Home</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+</body>
+</html>
