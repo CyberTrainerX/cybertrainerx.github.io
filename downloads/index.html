@@ -106,6 +106,13 @@
             text-decoration: none;
         }
         .footer a:hover { text-decoration: underline; }
+        .error-box {
+            color: #ff6b6b;
+            background: #2a1a1a;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -156,7 +163,7 @@
                 'wtv': '📺',
                 // Images
                 'jpg': '🌅', 'jpeg': '🌅', 'png': '🌅', 'gif': '🌅',
-                'bmp': '🌅', 'tiff': '🌅', 'webp': '🌅','ico':'🌅'
+                'bmp': '🌅', 'tiff': '🌅', 'webp': '🌅', 'ico': '🌅',  // ← 这里补了逗号
                 'psd': '📲', 'ai': '📲', 'eps': '📲',
                 // Executables
                 'exe': '🖥', 'msi': '📦', 'apk': '📱',
@@ -165,14 +172,18 @@
             return map[ext] || '📂';
         }
 
-        // ---- Fetch and render ----
-        fetch('files.json')
+        // ---- Fetch and render (with timeout) ----
+        const container = document.getElementById('fileList');
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+
+        fetch('files.json', { signal: controller.signal })
             .then(res => {
-                if (!res.ok) throw new Error('Failed to load file list');
+                clearTimeout(timeout);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 return res.json();
             })
             .then(files => {
-                const container = document.getElementById('fileList');
                 if (!files || files.length === 0) {
                     container.innerHTML = '<div class="empty">📭 No files available</div>';
                     return;
@@ -181,6 +192,9 @@
                 files.forEach(file => {
                     const encoded = encodeURIComponent(file.name);
                     const icon = getFileIcon(file.name);
+                    // 支持外链
+                    const link = file.link ? file.link : `resources/${encoded}`;
+                    const target = file.link ? ' target="_blank"' : '';
                     html += `
                         <div class="file-item">
                             <div class="file-info">
@@ -188,15 +202,18 @@
                                 <span class="file-name">${file.name}</span>
                                 <span class="file-size">${file.size || ''}</span>
                             </div>
-                            <a href="resources/${encoded}" class="download-btn" download>⬇ Download</a>
+                            <a href="${link}" class="download-btn" download${target}>⬇ Download</a>
                         </div>
                     `;
                 });
                 container.innerHTML = html;
             })
             .catch(err => {
-                document.getElementById('fileList').innerHTML = `<div class="empty">❌ Error: ${err.message}</div>`;
-                console.error(err);
+                clearTimeout(timeout);
+                let msg = err.message;
+                if (err.name === 'AbortError') msg = 'Request timed out (check network or files.json)';
+                container.innerHTML = `<div class="error-box">❌ Error: ${msg}</div>`;
+                console.error('Fetch error:', err);
             });
     </script>
 </body>
