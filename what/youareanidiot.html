@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You are an Idiot!</title>
+    <style>
+        /* 全局重置 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Times New Roman', Times, serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* 闪烁容器 */
+        .container {
+            text-align: center;
+        }
+
+        /* 主文字 */
+        .main-text {
+            font-size: 6rem;
+            font-weight: bold;
+            letter-spacing: 6px;
+            line-height: 1.2;
+        }
+
+        /* 笑脸行 */
+        .smileys {
+            font-size: 4.5rem;
+            letter-spacing: 20px;
+            margin-top: 10px;
+        }
+
+        /* 黑白切换动画（利用 body 的 class 切换） */
+        body.flash-black .main-text,
+        body.flash-black .smileys {
+            color: #ffffff;
+        }
+
+        body.flash-white .main-text,
+        body.flash-white .smileys {
+            color: #000000;
+        }
+
+        body.flash-black {
+            background: #000000;
+        }
+
+        body.flash-white {
+            background: #ffffff;
+        }
+
+        /* 防右键 */
+        .no-select { user-select: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-text">YOU ARE AN IDIOT!</div>
+        <div class="smileys">☺ ☺ ☺</div>
+    </div>
+
+    <script>
+        (function() {
+            let isWhite = false;
+            // 每 700ms 切换一次（与原版一致）
+            setInterval(() => {
+                isWhite = !isWhite;
+                document.body.className = isWhite ? 'flash-white' : 'flash-black';
+            }, 700);
+
+            // 防右键
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // 防 F12 等
+            document.addEventListener('keydown', function(e) {
+                if ([123, 27, 18, 9, 115, 116, 112, 114, 122].includes(e.keyCode)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // 阻止选中文本
+            document.addEventListener('selectstart', e => e.preventDefault());
+        })();
+    </script>
+</body>
+</html>
