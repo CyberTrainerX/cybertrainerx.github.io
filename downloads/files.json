@@ -1,5 +1,5 @@
 [
-    { "name": "example.txt", "size": "" },
-    { "name": "coding rain.py", "size": "" },
-    { "name": "favicon.ico", "size": "" }
+    { "name": "example.txt", "size": "", "source": "resources/" },
+    { "name": "coding rain.py", "size": "", "source": "resources/" },
+    { "name": "favicon.ico", "size": "", "source": "resources/" }
 ]
