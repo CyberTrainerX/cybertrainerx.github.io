@@ -131,15 +131,16 @@
                     const targetAttr = linkInfo.target ? `target="${linkInfo.target}"` : '';
                     const externalClass = linkInfo.isExternal ? 'external' : '';
                     html += `
-                        <div class="file-item">
-                            <div class="file-info">
-                                <span class="file-icon">${icon}</span>
-                                <span class="file-name">${file.name}</span>
-                                <span class="file-size">${file.size || ''}</span>
-                            </div>
-                            <a href="${linkInfo.href}" class="download-btn ${externalClass}" ${downloadAttr} ${targetAttr}>⬇ Download</a>
-                        </div>
-                    `;
+    <div class="file-item">
+        <div class="file-info">
+            <span class="file-icon">${icon}</span>
+            <span class="file-name">${file.name}</span>
+            <span class="file-size">${file.size || ''}</span>
+            <span style="color: #ffaa33; margin-left: 10px; font-size: 0.8rem;">🔑 Default Key:0000</span>
+        </div>
+        <a href="${linkInfo.href}" class="download-btn ${externalClass}" ${downloadAttr} ${targetAttr}>⬇ Download</a>
+    </div>
+`;
                 });
                 container.innerHTML = html;
             })
