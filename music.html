@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music · CyberTrainerX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0c10; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #c0c5ce; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { max-width: 700px; width: 100%; background: #141a20; padding: 30px 25px; border-radius: 16px; border: 1px solid #2a343e; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        h1 { font-size: 2rem; font-weight: 300; letter-spacing: 1px; color: #e0e6ed; margin-bottom: 6px; }
+        .sub { color: #6c8b9b; font-size: 0.9rem; margin-bottom: 25px; border-bottom: 1px solid #1e242a; padding-bottom: 15px; }
+        .file-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
+        .file-item { background: #1c2630; border-radius: 8px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+        .file-item:hover { background: #26323e; }
+        .file-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+        .file-icon { font-size: 1.4rem; width: 2rem; text-align: center; }
+        .file-name { color: #e0e6ed; font-family: 'Courier New', monospace; font-size: 0.95rem; word-break: break-all; }
+        .play-btn { background: #1e6e8c; color: white; border: none; padding: 5px 16px; border-radius: 4px; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; white-space: nowrap; margin-left: 10px; }
+        .play-btn:hover { background: #2a8aaa; }
+        .empty { text-align: center; color: #6c8b9b; padding: 20px 0; }
+        .error-box { color: #ff6b6b; background: #2a1a1a; padding: 15px; border-radius: 6px; margin: 10px 0; font-size: 0.85rem; }
+        .footer { font-size: 0.75rem; color: #4a5a6a; border-top: 1px solid #1e242a; padding-top: 15px; text-align: center; }
+        .footer a { color: #66b8ff; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Music</h1>
+        <div class="sub">Click to play · Audio / Video supported</div>
+        <div class="file-list" id="fileList">
+            <div class="empty">⏳ Loading...</div>
+        </div>
+        <div class="footer">
+            <a href="/">🏠 Home</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            owner: 'CyberTrainerX',
+            repo: 'cybertrainerx.github.io',
+            dir: 'data/resources/music',
+            cacheKey: 'music_cache_v1',
+            cacheTTL: 5 * 60 * 1000,
+            timeout: 8000
+        };
+
+        function readCache() {
+            try {
+                const raw = localStorage.getItem(CONFIG.cacheKey);
+                if (!raw) return null;
+                const obj = JSON.parse(raw);
+                if (Date.now() - obj.time > CONFIG.cacheTTL) return null;
+                return obj.files;
+            } catch (e) { return null; }
+        }
+
+        function writeCache(files) {
+            try {
+                localStorage.setItem(CONFIG.cacheKey, JSON.stringify({
+                    time: Date.now(),
+                    files: files
+                }));
+            } catch (e) {}
+        }
+
+        async function fetchFromAPI() {
+            const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.dir}`;
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), CONFIG.timeout);
+
+            try {
+                const res = await fetch(url, { signal: controller.signal });
+                clearTimeout(timer);
+
+                if (res.status === 403) {
+                    const reset = res.headers.get('X-RateLimit-Reset');
+                    const waitMin = reset ? Math.ceil((reset * 1000 - Date.now()) / 60000) : '?';
+                    throw new Error(`API rate limit exceeded (reset in ~${waitMin} min)`);
+                }
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const items = await res.json();
+                if (!Array.isArray(items)) throw new Error('Invalid API response');
+
+                return items
+                    .filter(item => item.type === 'file' && !item.name.startsWith('.'))
+                    .map(item => ({ name: item.name, size: item.size }));
+            } catch (e) {
+                clearTimeout(timer);
+                throw e;
+            }
+        }
+
+        function render(files) {
+            const container = document.getElementById('fileList');
+
+            if (!files || files.length === 0) {
+                container.innerHTML = '<div class="empty">🎵 No music files</div>';
+                return;
+            }
+
+            let html = '';
+            files.forEach(file => {
+                const encoded = encodeURIComponent(file.name);
+                html += `
+                    <div class="file-item">
+                        <div class="file-info">
+                            <span class="file-icon">🎶</span>
+                            <span class="file-name">${file.name}</span>
+                        </div>
+                        <a href="player.html?file=${encoded}" class="play-btn">▶ Play</a>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        async function init() {
+            const cached = readCache();
+            if (cached && cached.length) {
+                render(cached);
+            }
+
+            try {
+                const files = await fetchFromAPI();
+                writeCache(files);
+                render(files);
+            } catch (e) {
+                console.warn('[Music API failed]', e.message);
+                if (!cached || !cached.length) {
+                    document.getElementById('fileList').innerHTML =
+                        `<div class="error-box">❌ Failed to load music list<br>${e.message}</div>`;
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
