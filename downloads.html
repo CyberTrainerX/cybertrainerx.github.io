@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads · CyberTrainerX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0c10; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #c0c5ce; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { max-width: 700px; width: 100%; background: #141a20; padding: 30px 25px; border-radius: 16px; border: 1px solid #2a343e; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        h1 { font-size: 2rem; font-weight: 300; letter-spacing: 1px; color: #e0e6ed; }
+        .source-link { font-size: 0.75rem; color: #66b8ff; text-decoration: none; background: #1c2630; padding: 6px 12px; border-radius: 12px; transition: background 0.2s; }
+        .source-link:hover { background: #26323e; text-decoration: underline; }
+        .sub { color: #6c8b9b; font-size: 0.9rem; margin-bottom: 25px; border-bottom: 1px solid #1e242a; padding-bottom: 15px; }
+        .file-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
+        .file-item { background: #1c2630; border-radius: 8px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+        .file-item:hover { background: #26323e; }
+        .file-info { display: flex; align-items: center; gap: 10px; overflow: hidden; flex-wrap: wrap; }
+        .file-icon { font-size: 1.4rem; width: 2rem; text-align: center; }
+        .file-name { color: #e0e6ed; font-family: 'Courier New', monospace; font-size: 0.95rem; word-break: break-all; }
+        .file-size { color: #6c8b9b; font-size: 0.8rem; margin-left: 6px; }
+        .pwd { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; margin-left: 8px; white-space: nowrap; }
+        .pwd-has { color: #ffaa33; background: #2a1a0a; }
+        .pwd-empty { color: #88aacc; background: #1a2a3a; }
+        .download-btn { background: #1e6e8c; color: white; border: none; padding: 5px 16px; border-radius: 4px; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; white-space: nowrap; margin-left: 10px; }
+        .download-btn:hover { background: #2a8aaa; }
+        .empty { text-align: center; color: #6c8b9b; padding: 20px 0; }
+        .error-box { color: #ff6b6b; background: #2a1a1a; padding: 15px; border-radius: 6px; margin: 10px 0; font-size: 0.85rem; }
+        .footer { font-size: 0.75rem; color: #4a5a6a; border-top: 1px solid #1e242a; padding-top: 15px; text-align: center; }
+        .footer a { color: #66b8ff; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Downloads</h1>
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io/tree/main/data/resources"
+               target="_blank" class="source-link">📂 原始目录</a>
+        </div>
+        <div class="sub">External download links</div>
+        <div class="file-list" id="fileList">
+            <div class="empty">⏳ Loading...</div>
+        </div>
+        <div class="footer">
+            <a href="/">🏠 Home</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const map = {
+                'doc':'📄','docx':'📄','pdf':'📄','txt':'📄','rtf':'📄','odt':'📄','xls':'📄','xlsx':'📄','ppt':'📄','pptx':'📄','md':'📄',
+                'zip':'📦','rar':'📦','7z':'📦','tar':'📚','gz':'📚','bz2':'📚','xz':'📚',
+                'js':'⌨️','py':'⌨️','html':'⌨️','css':'⌨️','java':'⌨️','c':'⌨️','cpp':'⌨️','sh':'⌨️','bat':'⌨️','rb':'⌨️','go':'⌨️','rs':'⌨️','php':'⌨️','swift':'⌨️','kt':'⌨️','ts':'⌨️',
+                'iso':'💾','img':'💾','bin':'💾','dmg':'💾','vhd':'💾','vmdk':'💾','pkg':'💾',
+                'csv':'📂','json':'📂','xml':'📂','sql':'📂','db':'📂','dat':'📂','log':'📂','yaml':'📂',
+                'rom':'📀','firmware':'📠','fw':'📠',
+                'mp3':'🎙','wav':'🎙','aac':'🎙','flac':'🎙','m4a':'🎙','ogg':'🎙','wma':'🎙','aiff':'🎙',
+                'mp4':'🎞','avi':'🎞','webm':'🎞','mkv':'🎥','mov':'🎥','wmv':'🎥','flv':'📽','3gp':'📹','m4v':'🎞','wtv':'📺',
+                'jpg':'🌅','jpeg':'🌅','png':'🌅','gif':'🌅','bmp':'🌅','tiff':'🌅','webp':'🌅','ico':'🌅',
+                'psd':'📲','ai':'📲','eps':'📲',
+                'exe':'🖥','msi':'📦','apk':'📱','app':'📱','deb':'📦','rpm':'📦'
+            };
+            return map[ext] || '📂';
+        }
+
+        function buildPwdTag(file) {
+            if (!('password' in file)) return '';
+            if (file.password === '' || file.password === null) {
+                return '<span class="pwd pwd-empty">🔒 受保护的</span>';
+            }
+            return `<span class="pwd pwd-has">🔑 密码: ${file.password}</span>`;
+        }
+
+        async function init() {
+            const container = document.getElementById('fileList');
+
+            try {
+                const res = await fetch('data/files.json', { cache: 'no-store' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const files = await res.json();
+
+                if (!files || files.length === 0) {
+                    container.innerHTML = '<div class="empty">📭 No external links</div>';
+                    return;
+                }
+
+                let html = '';
+                files.forEach(file => {
+                    const icon = getFileIcon(file.name);
+                    const pwdTag = buildPwdTag(file);
+                    html += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <span class="file-icon">${icon}</span>
+                                <span class="file-name">${file.name}</span>
+                                <span class="file-size">${file.size || ''}</span>
+                                ${pwdTag}
+                            </div>
+                            <a href="${file.source}" class="download-btn" target="_blank" rel="noopener">🔗 Open</a>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = `<div class="error-box">❌ Failed to load: ${e.message}</div>`;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
