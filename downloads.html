@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads · CyberTrainerX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0c10; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #c0c5ce; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { max-width: 720px; width: 100%; background: #141a20; padding: 30px 25px; border-radius: 16px; border: 1px solid #2a343e; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        h1 { font-size: 2rem; font-weight: 300; letter-spacing: 1px; color: #e0e6ed; margin-bottom: 6px; }
+        .sub { color: #6c8b9b; font-size: 0.9rem; margin-bottom: 20px; border-bottom: 1px solid #1e242a; padding-bottom: 15px; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .tab {
+            flex: 1; background: #1c2630; color: #aab5c0; border: 1px solid transparent;
+            padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+            transition: all 0.2s; font-family: inherit;
+        }
+        .tab:hover { background: #26323e; }
+        .tab.active { background: #26323e; color: #e0e6ed; border-color: #3e5060; }
+
+        /* 文件列表通用 */
+        .file-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; min-height: 100px; }
+        .file-item { background: #1c2630; border-radius: 8px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+        .file-item:hover { background: #26323e; }
+        .file-item.folder { cursor: pointer; }
+        .file-info { display: flex; align-items: center; gap: 10px; overflow: hidden; flex-wrap: wrap; }
+        .file-icon { font-size: 1.4rem; width: 2rem; text-align: center; }
+        .file-name { color: #e0e6ed; font-family: 'Courier New', monospace; font-size: 0.95rem; word-break: break-all; }
+        .file-size { color: #6c8b9b; font-size: 0.8rem; margin-left: 6px; }
+        .pwd { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; margin-left: 8px; white-space: nowrap; }
+        .pwd-has { color: #ffaa33; background: #2a1a0a; }
+        .pwd-empty { color: #88aacc; background: #1a2a3a; }
+        .download-btn { background: #1e6e8c; color: white; border: none; padding: 5px 16px; border-radius: 4px; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; white-space: nowrap; margin-left: 10px; }
+        .download-btn:hover { background: #2a8aaa; }
+        .arrow { color: #6c8b9b; font-size: 1.2rem; }
+
+        /* 面包屑 */
+        .breadcrumb {
+            background: #0f1519; padding: 10px 14px; border-radius: 8px;
+            font-size: 0.85rem; font-family: 'Courier New', monospace;
+            color: #8a9ba8; margin-bottom: 15px; word-break: break-all;
+        }
+        .breadcrumb a { color: #66b8ff; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb .sep { color: #4a5a6a; margin: 0 4px; }
+
+        .empty { text-align: center; color: #6c8b9b; padding: 20px 0; }
+        .error-box { color: #ff6b6b; background: #2a1a1a; padding: 15px; border-radius: 6px; margin: 10px 0; font-size: 0.85rem; }
+        .loading { text-align: center; color: #6c8b9b; padding: 20px 0; font-size: 0.9rem; }
+
+        .footer { font-size: 0.75rem; color: #4a5a6a; border-top: 1px solid #1e242a; padding-top: 15px; text-align: center; }
+        .footer a { color: #66b8ff; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 Downloads</h1>
+        <div class="sub">External links &amp; in-repo file browser</div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="external">🔗 External Links</button>
+            <button class="tab" data-tab="browse">📂 Browse Files</button>
+        </div>
+
+        <!-- 外链视图 -->
+        <div id="externalView">
+            <div class="file-list" id="externalList">
+                <div class="loading">⏳ Loading...</div>
+            </div>
+        </div>
+
+        <!-- 文件浏览视图 -->
+        <div id="browseView" style="display:none">
+            <div class="breadcrumb" id="breadcrumb">📂 data/resources</div>
+            <div class="file-list" id="browseList">
+                <div class="loading">⏳ Loading...</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <a href="/">🏠 Home</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 配置
+        // ============================================================
+        const CONFIG = {
+            owner: 'CyberTrainerX',
+            repo: 'cybertrainerx.github.io',
+            rootPath: 'data/resources',
+            cacheKey: 'browse_tree_v1',
+            cacheTTL: 5 * 60 * 1000,
+            timeout: 10000
+        };
+
+        // ============================================================
+        // 图标映射
+        // ============================================================
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const map = {
+                'doc':'📄','docx':'📄','pdf':'📄','txt':'📄','rtf':'📄','odt':'📄','xls':'📄','xlsx':'📄','ppt':'📄','pptx':'📄','md':'📄',
+                'zip':'📦','rar':'📦','7z':'📦','tar':'📚','gz':'📚','bz2':'📚','xz':'📚',
+                'js':'⌨️','py':'⌨️','html':'⌨️','css':'⌨️','java':'⌨️','c':'⌨️','cpp':'⌨️','sh':'⌨️','bat':'⌨️','rb':'⌨️','go':'⌨️','rs':'⌨️','php':'⌨️','swift':'⌨️','kt':'⌨️','ts':'⌨️',
+                'iso':'💾','img':'💾','bin':'💾','dmg':'💾','vhd':'💾','vmdk':'💾','pkg':'💾',
+                'csv':'📂','json':'📂','xml':'📂','sql':'📂','db':'📂','dat':'📂','log':'📂','yaml':'📂',
+                'rom':'📀','firmware':'📠','fw':'📠',
+                'mp3':'🎙','wav':'🎙','aac':'🎙','flac':'🎙','m4a':'🎙','ogg':'🎙','wma':'🎙','aiff':'🎙',
+                'mp4':'🎞','avi':'🎞','webm':'🎞','mkv':'🎥','mov':'🎥','wmv':'🎥','flv':'📽','3gp':'📹','m4v':'🎞','wtv':'📺',
+                'jpg':'🌅','jpeg':'🌅','png':'🌅','gif':'🌅','bmp':'🌅','tiff':'🌅','webp':'🌅','ico':'🌅',
+                'psd':'📲','ai':'📲','eps':'📲',
+                'exe':'🖥','msi':'📦','apk':'📱','app':'📱','deb':'📦','rpm':'📦'
+            };
+            return map[ext] || '📂';
+        }
+
+        function formatSize(bytes) {
+            if (bytes === undefined || bytes === null) return '';
+            if (bytes === 0) return '0 B';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+            return (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+        }
+
+        // ============================================================
+        // Tab 切换
+        // ============================================================
+        let browseInitialized = false;
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const target = tab.dataset.tab;
+                if (target === 'external') {
+                    document.getElementById('externalView').style.display = 'block';
+                    document.getElementById('browseView').style.display = 'none';
+                } else {
+                    document.getElementById('externalView').style.display = 'none';
+                    document.getElementById('browseView').style.display = 'block';
+                    if (!browseInitialized) {
+                        browseInitialized = true;
+                        initBrowse();
+                    }
+                }
+            });
+        });
+
+        // ============================================================
+        // 外链视图（读取 data/files.json）
+        // ============================================================
+        function buildPwdTag(file) {
+            if (!('password' in file)) return '';
+            if (file.password === '' || file.password === null) {
+                return '<span class="pwd pwd-empty">🔒 受保护的</span>';
+            }
+            return `<span class="pwd pwd-has">🔑 密码: ${file.password}</span>`;
+        }
+
+        async function initExternal() {
+            const container = document.getElementById('externalList');
+            try {
+                const res = await fetch('data/files.json', { cache: 'no-store' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const files = await res.json();
+
+                if (!files || files.length === 0) {
+                    container.innerHTML = '<div class="empty">📭 No external links</div>';
+                    return;
+                }
+
+                let html = '';
+                files.forEach(file => {
+                    const icon = getFileIcon(file.name);
+                    const pwdTag = buildPwdTag(file);
+                    html += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <span class="file-icon">${icon}</span>
+                                <span class="file-name">${file.name}</span>
+                                <span class="file-size">${file.size || ''}</span>
+                                ${pwdTag}
+                            </div>
+                            <a href="${file.source}" class="download-btn" target="_blank" rel="noopener">🔗 Open</a>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = `<div class="error-box">❌ Failed to load: ${e.message}</div>`;
+            }
+        }
+
+        // ============================================================
+        // 文件浏览器
+        // ============================================================
+        let treeData = null;       // 完整目录树
+        let currentPath = [];      // ['music', 'subfolder']
+
+        function readCache() {
+            try {
+                const raw = localStorage.getItem(CONFIG.cacheKey);
+                if (!raw) return null;
+                const obj = JSON.parse(raw);
+                if (Date.now() - obj.time > CONFIG.cacheTTL) return null;
+                return obj.files;
+            } catch (e) { return null; }
+        }
+
+        function writeCache(files) {
+            try {
+                localStorage.setItem(CONFIG.cacheKey, JSON.stringify({
+                    time: Date.now(),
+                    files: files
+                }));
+            } catch (e) {}
+        }
+
+        // 用 git/trees API 一次拉全仓库文件树，再过滤出 data/resources/ 下的
+        async function fetchTree() {
+            const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/git/trees/main?recursive=1`;
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), CONFIG.timeout);
+
+            try {
+                const res = await fetch(url, { signal: controller.signal });
+                clearTimeout(timer);
+
+                if (res.status === 403) {
+                    const reset = res.headers.get('X-RateLimit-Reset');
+                    const waitMin = reset ? Math.ceil((reset * 1000 - Date.now()) / 60000) : '?';
+                    throw new Error(`API rate limit exceeded (reset in ~${waitMin} min)`);
+                }
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const data = await res.json();
+                if (!data.tree || !Array.isArray(data.tree)) {
+                    throw new Error('Invalid API response');
+                }
+                if (data.truncated) {
+                    console.warn('[Browse] Tree truncated — some files may be missing');
+                }
+
+                const prefix = CONFIG.rootPath + '/';
+                return data.tree
+                    .filter(item => item.type === 'blob' && item.path.startsWith(prefix))
+                    .map(item => ({
+                        fullPath: item.path,
+                        rel: item.path.slice(prefix.length),
+                        size: item.size || 0
+                    }));
+            } catch (e) {
+                clearTimeout(timer);
+                throw e;
+            }
+        }
+
+        // 扁平路径列表 → 嵌套树
+        function buildTree(files) {
+            const root = { name: '', type: 'dir', children: {} };
+
+            files.forEach(file => {
+                const parts = file.rel.split('/');
+                let node = root;
+
+                for (let i = 0; i < parts.length - 1; i++) {
+                    const part = parts[i];
+                    if (!node.children[part]) {
+                        node.children[part] = { name: part, type: 'dir', children: {} };
+                    }
+                    node = node.children[part];
+                }
+
+                const fileName = parts[parts.length - 1];
+                node.children[fileName] = {
+                    name: fileName,
+                    type: 'file',
+                    size: file.size,
+                    fullPath: file.fullPath
+                };
+            });
+
+            return root;
+        }
+
+        function getCurrentNode() {
+            let node = treeData;
+            for (const part of currentPath) {
+                if (!node || !node.children[part]) return null;
+                node = node.children[part];
+            }
+            return node;
+        }
+
+        function renderBreadcrumb() {
+            const bc = document.getElementById('breadcrumb');
+            let html = `<a href="#" data-path="">📂 data/resources</a>`;
+            currentPath.forEach((part, i) => {
+                const path = currentPath.slice(0, i + 1).join('/');
+                html += `<span class="sep">/</span><a href="#" data-path="${path}">${part}</a>`;
+            });
+            bc.innerHTML = html;
+        }
+
+        function renderBrowse() {
+            const node = getCurrentNode();
+            if (!node) {
+                currentPath = [];
+                return renderBrowse();
+            }
+
+            const container = document.getElementById('browseList');
+            renderBreadcrumb();
+
+            const entries = Object.values(node.children).sort((a, b) => {
+                if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+                return a.name.localeCompare(b.name);
+            });
+
+            if (entries.length === 0 && currentPath.length === 0) {
+                container.innerHTML = '<div class="empty">📭 This folder is empty</div>';
+                return;
+            }
+
+            let html = '';
+
+            if (currentPath.length > 0) {
+                html += `
+                    <div class="file-item folder" data-action="up">
+                        <div class="file-info">
+                            <span class="file-icon">⬆️</span>
+                            <span class="file-name">.. (Up one level)</span>
+                        </div>
+                        <span class="arrow">→</span>
+                    </div>
+                `;
+            }
+
+            if (entries.length === 0) {
+                html += '<div class="empty">📭 This folder is empty</div>';
+            }
+
+            entries.forEach(entry => {
+                if (entry.type === 'dir') {
+                    html += `
+                        <div class="file-item folder" data-action="enter" data-name="${entry.name}">
+                            <div class="file-info">
+                                <span class="file-icon">📁</span>
+                                <span class="file-name">${entry.name}/</span>
+                            </div>
+                            <span class="arrow">→</span>
+                        </div>
+                    `;
+                } else {
+                    const icon = getFileIcon(entry.name);
+                    // 拼下载 URL（相对站点根目录）
+                    const url = '/' + entry.fullPath.split('/').map(encodeURIComponent).join('/');
+                    html += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <span class="file-icon">${icon}</span>
+                                <span class="file-name">${entry.name}</span>
+                                <span class="file-size">${formatSize(entry.size)}</span>
+                            </div>
+                            <a href="${url}" class="download-btn" download>⬇ Download</a>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 事件委托：进入/返回目录
+        document.getElementById('browseList').addEventListener('click', e => {
+            const item = e.target.closest('.file-item');
+            if (!item) return;
+            // 点击下载按钮不处理
+            if (e.target.closest('.download-btn')) return;
+
+            const action = item.dataset.action;
+            if (action === 'enter') {
+                currentPath.push(item.dataset.name);
+                renderBrowse();
+            } else if (action === 'up') {
+                currentPath.pop();
+                renderBrowse();
+            }
+        });
+
+        // 事件委托：面包屑导航
+        document.getElementById('breadcrumb').addEventListener('click', e => {
+            const link = e.target.closest('a');
+            if (!link) return;
+            e.preventDefault();
+            const path = link.dataset.path;
+            currentPath = path ? path.split('/') : [];
+            renderBrowse();
+        });
+
+        // 初始化文件浏览器
+        async function initBrowse() {
+            const container = document.getElementById('browseList');
+
+            // ① 先读缓存，秒开
+            const cached = readCache();
+            if (cached && cached.length) {
+                treeData = buildTree(cached);
+                renderBrowse();
+            }
+
+            // ② 后台请求 API，静默刷新
+            try {
+                const files = await fetchTree();
+                writeCache(files);
+                treeData = buildTree(files);
+                renderBrowse();
+            } catch (e) {
+                console.warn('[Browse API failed]', e.message);
+                if (!cached || !cached.length) {
+                    container.innerHTML = `<div class="error-box">❌ Failed to load file tree<br>${e.message}</div>`;
+                }
+            }
+        }
+
+        // ============================================================
+        // 启动
+        // ============================================================
+        initExternal();
+    </script>
+</body>
+</html>
