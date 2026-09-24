@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❓ What? · CyberTrainerX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #c0c5ce;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 640px;
+            width: 100%;
+            background: #141a20;
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid #2a343e;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #1e242a;
+            padding-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: #e0e6ed;
+            margin-bottom: 8px;
+        }
+        .sub {
+            color: #6c8b9b;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .sub .warn {
+            color: #ffaa33;
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .nav-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .nav-item {
+            background: #1c2630;
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-decoration: none;
+            color: #c0c5ce;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s, transform 0.1s;
+            border: 1px solid transparent;
+        }
+        .nav-item:hover {
+            background: #26323e;
+            border-color: #3e5060;
+            transform: scale(1.01);
+        }
+        .nav-item .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+        }
+        .nav-item .icon {
+            font-size: 1.6rem;
+            width: 2rem;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .nav-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow: hidden;
+        }
+        .nav-item .label {
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: #e0e6ed;
+        }
+        .nav-item .desc {
+            font-size: 0.75rem;
+            color: #6c8b9b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .nav-item .arrow {
+            color: #6c8b9b;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            color: #4a5a6a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 20px 0 10px 6px;
+        }
+
+        .footer {
+            font-size: 0.75rem;
+            color: #4a5a6a;
+            border-top: 1px solid #1e242a;
+            padding-top: 18px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #66b8ff;
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; }
+
+        /* 标签徽章 */
+        .tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            padding: 1px 6px;
+            border-radius: 8px;
+            margin-left: 6px;
+            vertical-align: middle;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+        }
+        .tag-danger { background: #3a1a1a; color: #ff6b6b; }
+        .tag-secret { background: #2a1a3a; color: #bb88ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>❓ What?</h1>
+            <div class="sub">
+                A collection of suspicious stuff
+                <span class="warn">⚠️ Proceed at your own risk ⚠️</span>
+            </div>
+        </div>
+
+        <div class="section-title">Videos</div>
+        <div class="nav-grid">
+            <a href="Rick roll.html" class="nav-item">
+                <div class="left">
+                    <span class="icon">🎬</span>
+                    <span class="info">
+                        <span class="label">Rick Roll</span>
+                        <span class="desc">Never gonna give you up...</span>
+                    </span>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+            <a href="leakedMaterials.mp4" class="nav-item" target="_blank">
+                <div class="left">
+                    <span class="icon">📹</span>
+                    <span class="info">
+                        <span class="label">Leaked Materials</span>
+                        <span class="desc">Top secret footage · DO NOT SHARE</span>
+                    </span>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <div class="section-title">Pranks</div>
+        <div class="nav-grid">
+            <a href="upgrader.html" class="nav-item">
+                <div class="left">
+                    <span class="icon">🪟</span>
+                    <span class="info">
+                        <span class="label">Fake Update Page</span>
+                        <span class="desc">Installing critical security update... <span class="tag tag-danger">FAKE</span></span>
+                    </span>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+            <a href="youareanidiot.html" class="nav-item">
+                <div class="left">
+                    <span class="icon">😜</span>
+                    <span class="info">
+                        <span class="label">You Are An Idiot</span>
+                        <span class="desc">Classic flashing flashback ☺ ☺ ☺</span>
+                    </span>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+            <a href="baldi.html" class="nav-item">
+                <div class="left">
+                    <span class="icon">📚</span>
+                    <span class="info">
+                        <span class="label">Baldi's Basics</span>
+                        <span class="desc">Welcome to Baldi's schoolhouse 🎓</span>
+                    </span>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <div class="section-title">Restricted</div>
+        <div class="nav-grid">
+            <a href="secret/" class="nav-item">
+                <div class="left">
+                    <span class="icon">🔐</span>
+                    <span class="info">
+                        <span class="label">Secret Area</span>
+                        <span class="desc">Authorized personnel only <span class="tag tag-secret">LOCKED</span></span>
+                    </span>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <a href="/">🏠 Home</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+</body>
+</html>
