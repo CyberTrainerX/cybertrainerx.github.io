@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Downloads · CyberTrainerX</title>
+    <title>Downloads</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #0a0c10; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #c0c5ce; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
@@ -37,7 +37,6 @@
         .download-btn:hover { background: #2a8aaa; }
         .arrow { color: #6c8b9b; font-size: 1.2rem; }
 
-        /* 面包屑 */
         .breadcrumb {
             background: #0f1519; padding: 10px 14px; border-radius: 8px;
             font-size: 0.85rem; font-family: 'Courier New', monospace;
@@ -161,9 +160,9 @@
         function buildPwdTag(file) {
             if (!('password' in file)) return '';
             if (file.password === '' || file.password === null) {
-                return '<span class="pwd pwd-empty">🔒 受保护的</span>';
+                return '<span class="pwd pwd-empty">🔒 Protected</span>';
             }
-            return `<span class="pwd pwd-has">🔑 密码: ${file.password}</span>`;
+            return `<span class="pwd pwd-has">🔑 Password: ${file.password}</span>`;
         }
 
         async function initExternal() {
@@ -225,7 +224,7 @@
             } catch (e) {}
         }
 
-        // 用 git/trees API 一次拉全仓库文件树，再过滤出 data/resources/ 下的
+        // l
         async function fetchTree() {
             const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/git/trees/main?recursive=1`;
             const controller = new AbortController();
@@ -264,7 +263,6 @@
             }
         }
 
-        // 扁平路径列表 → 嵌套树
         function buildTree(files) {
             const root = { name: '', type: 'dir', children: {} };
 
