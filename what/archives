@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Archives · CyberTrainerX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #c0c5ce;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 560px;
+            width: 100%;
+            background: #141a20;
+            padding: 45px 35px;
+            border-radius: 20px;
+            border: 1px solid #2a343e;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #1e242a;
+            padding-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: #e0e6ed;
+            margin-bottom: 8px;
+        }
+        .sub {
+            color: #6c8b9b;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .warn {
+            color: #ffaa33;
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .lock-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .hint {
+            color: #8a9ba8;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            background: #1c2630;
+            border: 1px solid #2a343e;
+            border-radius: 10px;
+            padding: 14px 18px;
+            color: #e0e6ed;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-align: center;
+            transition: all 0.2s;
+            outline: none;
+        }
+        input[type="text"]:focus {
+            border-color: #3e5060;
+            background: #26323e;
+            box-shadow: 0 0 0 3px rgba(102, 184, 255, 0.1);
+        }
+        input[type="text"]::placeholder {
+            color: #4a5a6a;
+            letter-spacing: 1px;
+            font-size: 0.95rem;
+        }
+
+        button {
+            background: #1e6e8c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 400;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background: #2a8aaa;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        button:disabled {
+            background: #1c2630;
+            color: #4a5a6a;
+            cursor: not-allowed;
+        }
+
+        .status {
+            min-height: 24px;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            transition: opacity 0.2s;
+        }
+        .status.error { color: #ff6b6b; }
+        .status.success { color: #66b8ff; }
+        .status.checking { color: #8a9ba8; }
+
+        .footer {
+            font-size: 0.75rem;
+            color: #4a5a6a;
+            border-top: 1px solid #1e242a;
+            padding-top: 18px;
+            margin-top: 25px;
+        }
+        .footer a {
+            color: #66b8ff;
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; }
+
+        /* 悬浮提示：可用档案 */
+        .hint-dates {
+            font-size: 0.7rem;
+            color: #4a5a6a;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Archives</h1>
+            <div class="sub">Restricted date-based access</div>
+        </div>
+
+        <div class="lock-icon">🔐</div>
+
+        <div class="hint">
+            Enter the archive date code to access<br>
+            the restricted file.
+        </div>
+
+        <div class="input-group">
+            <input
+                type="text"
+                id="dateInput"
+                placeholder="YYYYMMDD"
+                maxlength="8"
+                autocomplete="off"
+                spellcheck="false"
+                inputmode="numeric"
+                pattern="[0-9]*"
+            >
+            <button id="accessBtn">Unlock Archive</button>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="footer">
+            <a href="/">🏠 Home</a> · 
+            <a href="index.html">← Back</a> · 
+            <a href="https://github.com/CyberTrainerX/cybertrainerx.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const input = document.getElementById('dateInput');
+            const btn = document.getElementById('accessBtn');
+            const status = document.getElementById('status');
+
+            // 只允许输入数字
+            input.addEventListener('input', () => {
+                input.value = input.value.replace(/\D/g, '');
+                status.textContent = '';
+                status.className = 'status';
+            });
+
+            // 回车触发
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    tryAccess();
+                }
+            });
+
+            btn.addEventListener('click', tryAccess);
+
+            async function tryAccess() {
+                const date = input.value.trim();
+
+                if (!/^\d{8}$/.test(date)) {
+                    setStatus('Please enter an 8-digit date code (YYYYMMDD)', 'error');
+                    return;
+                }
+
+                setStatus('🔍 Verifying archive...', 'checking');
+                btn.disabled = true;
+
+                const target = `${date}.html`;
+
+                try {
+                    // HEAD 请求检查文件是否存在
+                    const res = await fetch(target, { method: 'HEAD' });
+
+                    if (res.ok) {
+                        setStatus('✅ Access granted. Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = target;
+                        }, 500);
+                    } else {
+                        setStatus('❌ Archive not found. Access denied.', 'error');
+                        btn.disabled = false;
+                    }
+                } catch (e) {
+                    setStatus('❌ Verification failed. Try again.', 'error');
+                    btn.disabled = false;
+                }
+            }
+
+            function setStatus(msg, cls) {
+                status.textContent = msg;
+                status.className = 'status ' + (cls || '');
+            }
+        })();
+    </script>
+</body>
+</html>
