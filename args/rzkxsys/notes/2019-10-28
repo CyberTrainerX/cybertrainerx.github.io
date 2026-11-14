@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>回收率与白色记忆 · 林晚</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>研究笔记</h1>
+    <p class="sub">认知科学实验室 · 记忆编码组</p>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="../about.html">关于</a>
+      <a href="./">笔记</a>
+      <a href="../contact.html">联系</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="dated">2019 年 10 月 28 日</p>
+    <h2>回收率与白色记忆</h2>
+
+    <p>回收率仍然只有 41%。未回收的记忆并没有消失，它们只是没有被编码进可检索的位置。</p>
+    <p>我把这种现象叫作“白色记忆”：存在于背景里，和背景同色。只有选中它，才会短暂显形。</p>
+    <p>观察室的墙是白色的。有时候我觉得，墙上也写着东西。</p>
+  </main>
+
+  <footer>
+    <p><a href="./">← 返回笔记索引</a></p>
+  </footer>
+</div>
+</body>
+</html>
