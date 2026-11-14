@@ -1,1 +1,1 @@
-**This is my GitHub Pages!**
+**THIS SITE WILL BE CLOSED!**
