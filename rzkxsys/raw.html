@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>原始档 · 查看</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --ink: #222;
+    --muted: #777;
+    --line: #ddd;
+    --accent: #5b4b8a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+  }
+  .bar {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bar a { color: var(--accent); text-decoration: none; }
+  .bar .name {
+    color: var(--muted);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .82rem;
+  }
+  pre {
+    margin: 0;
+    padding: 20px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .82rem;
+    line-height: 1.7;
+    color: #444;
+  }
+  .notice { color: var(--muted); padding: 20px; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="javascript:history.back()">← 返回</a>
+  <span class="name" id="fname">原始档</span>
+</div>
+<pre id="src"></pre>
+<p class="notice" id="notice" hidden>无法读取原始档。请确认文件存在。</p>
+
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var file = params.get('file') || '';
+  var src = document.getElementById('src');
+  var fname = document.getElementById('fname');
+  var notice = document.getElementById('notice');
+
+  if (!file) {
+    src.textContent = '未指定原始档。';
+    return;
+  }
+
+  fname.textContent = file;
+
+  fetch(file).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }).then(function (text) {
+    src.textContent = text;
+  }).catch(function () {
+    notice.hidden = false;
+  });
+})();
+</script>
+</body>
+</html>
