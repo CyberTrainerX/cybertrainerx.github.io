@@ -3,41 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>隐藏归档 · 受保护</title>
+<title>backup · 隐藏归档页</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>隐藏的归档</h1>
-    <p class="sub">受保护页面 · 仅限有口令者</p>
+    <h1>backup</h1>
+    <p class="sub">隐藏归档页 · 仅限有口令者</p>
   </header>
 
   <main>
-    <p>这里归档的是不适合公开的实验记录。</p>
+    <p>这里归档的是不适合公开的实验记录。口令为三段式身份验证码。</p>
 
-    <div class="vault-box" id="vaultBox">
-      <form id="vaultForm">
+    <div class="backup-box" id="backupBox">
+      <form id="backupForm">
         <label for="password">访问口令</label>
-        <input type="password" id="password" name="password" autocomplete="off" placeholder="输入口令">
+        <input type="password" id="password" name="password" autocomplete="off" placeholder="格式：缩写-日期-编号">
         <button type="submit">进入</button>
       </form>
       <p class="error" id="error"></p>
     </div>
 
     <div class="success hidden" id="success">
-  <h2>访问已授予</h2>
-  <p>第 13 号档案只有一页，另一半被撕掉了：</p>
-  <blockquote>
-    编号：13<br>
-    姓名：林晚<br>
-    状态：已编码<br>
-    备注：12 号在事故后接管了 13 号的笔记。她以为自己是林晚。
-  </blockquote>
-  <p>撕掉的那一半写着“12 号后来怎样了”。它不在 vault 里。</p>
-  <p>它被留在了最开始的地方。白色里。<a href="index.html">回首页，选中白色。</a></p>
-  <p class="muted">如果你读到这里，说明你也看见了白色。实验记录会更新。</p>
-</div>
+      <h2>访问已授予</h2>
+      <p>第 13 号档案只有一页，另一半被撕掉了：</p>
+      <blockquote>
+        编号：13<br>
+        姓名：林晚<br>
+        状态：已编码<br>
+        备注：12 号在事故后接管了 13 号的笔记。她以为自己是林晚。
+      </blockquote>
+      <p>撕掉的那一半不在隐藏归档页里。它被留在了最开始的地方——那段被复述的录音里。</p>
+      <p>回到 <a href="notes/2019-10-12.html">10-12 笔记</a>，重读“林晚，你也在里面”那句话。你会发现，那不是异常。</p>
+    </div>
   </main>
 
   <footer>
@@ -46,21 +45,23 @@
 </div>
 
 <script>
-  const PASSWORD = 'LW-1103';
+  const PASSWORD = 'LW-1012-13';
 
-  const form = document.getElementById('vaultForm');
+  const form = document.getElementById('backupForm');
   const input = document.getElementById('password');
   const error = document.getElementById('error');
-  const vaultBox = document.getElementById('vaultBox');
+  const backupBox = document.getElementById('backupBox');
   const success = document.getElementById('success');
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (input.value.trim() === PASSWORD) {
-      vaultBox.classList.add('hidden');
+    const v = input.value.trim().toUpperCase().replace(/\s+/g, '');
+    if (v === PASSWORD) {
+      backupBox.classList.add('hidden');
       success.classList.remove('hidden');
+      try { localStorage.setItem('vault_open', '1'); } catch (err) {}
     } else {
-      error.textContent = '口令错误，访问受限。';
+      error.textContent = '口令错误。';
     }
   });
 </script>
