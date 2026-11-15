@@ -58,6 +58,14 @@
 
 <script>
 (function () {
+  var ALLOW = [
+    'about.html',
+    'contact.html',
+    'notes/2019-10-12.html',
+    'notes/2019-10-28.html',
+    'notes/2019-11-03.html'
+  ];
+
   var params = new URLSearchParams(location.search);
   var file = params.get('file') || '';
   var src = document.getElementById('src');
@@ -66,6 +74,11 @@
 
   if (!file) {
     src.textContent = '未指定原始档。';
+    return;
+  }
+
+  if (ALLOW.indexOf(file) === -1) {
+    src.textContent = '原始档未归档。';
     return;
   }
 
