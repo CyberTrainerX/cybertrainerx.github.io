@@ -156,4 +156,14 @@ button {
   font-family: ui-monospace, Menlo, Consolas, monospace;
   color: #444;
 }
+
+.raw-mark {
+  margin-top: 48px;
+  color: #c9c6be;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
 .hidden { display: none; }
