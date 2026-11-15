@@ -166,4 +166,20 @@ button {
   font-family: ui-monospace, Menlo, Consolas, monospace;
 }
 
+.raw-link {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  font-size: .72rem;
+  letter-spacing: .12em;
+  color: #d9d6ce;
+  text-decoration: none;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  z-index: 10;
+}
+
+.raw-link:hover {
+  color: #b8b3a6;
+}
+
 .hidden { display: none; }
