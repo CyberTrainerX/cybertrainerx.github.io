@@ -98,7 +98,7 @@ footer {
   display: block;
 }
 
-.vault-box {
+.backup-box {
   background: #fff;
   border: 1px solid var(--line);
   padding: 24px;
@@ -130,32 +130,10 @@ button {
   padding: 24px;
   margin-top: 24px;
 }
-.data-block {
-  background: #fff;
-  border: 1px dashed var(--line);
-  padding: 16px 18px;
-  margin: 20px 0;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-size: .92rem;
-  line-height: 1.9;
-  word-break: break-all;
-  color: #555;
-}
 
-.data-block .label {
-  display: block;
-  color: var(--muted);
-  font-size: .78rem;
-  letter-spacing: .08em;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-}
+.hidden { display: none; }
 
-.morse {
-  letter-spacing: .22em;
-  font-family: ui-monospace, Menlo, Consolas, monospace;
-  color: #444;
-}
+.muted { color: var(--muted); }
 
 .raw-link {
   position: fixed;
@@ -172,5 +150,3 @@ button {
 .raw-link:hover {
   color: #b8b3a6;
 }
-
-.hidden { display: none; }
