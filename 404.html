@@ -85,15 +85,10 @@
 <script>
   (function () {
     var BASE = '/rzkxsys/';
-
-    // 去掉末尾斜杠，方便比较
     var path = location.pathname.replace(/\/+$/, '');
 
-    // 设置链接
     document.getElementById('homeLink').href = BASE;
-    document.getElementById('vaultLink').href = BASE + 'backup';
 
-    // /rzkxsys/subjects/13 触发隐藏档案
     var isSubject13 = path === '/rzkxsys/subjects/13';
 
     if (isSubject13) {
@@ -101,11 +96,6 @@
       document.getElementById('special').classList.remove('hidden');
       document.title = '编号 13 · 已归档';
     }
-    document.getElementById('enroll').addEventListener('click', function () {
-  try { localStorage.setItem('subject_14', '1'); } catch (e) {}
-  this.style.display = 'none';
-  document.getElementById('enrolled').classList.remove('hidden');
-});
   })();
 </script>
 </body>
