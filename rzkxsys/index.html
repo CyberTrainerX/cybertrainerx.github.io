@@ -19,52 +19,52 @@
     </nav>
   </header>
 
-    <main>
-<main>
-  <p class="dated">最后更新：2019 年 11 月 3 日</p>
+  <main>
+    <p class="dated">最后更新：2019 年 11 月 3 日</p>
 
-  <h2>站点状态</h2>
-  <p>本页不再更新。</p>
-  <p class="notice">实验室已于 2019 年 11 月中旬暂停对外开放。预约与邮件不再回复。站点内容保留，供查阅。</p>
+    <h2>站点状态</h2>
+    <p>本页不再更新。</p>
+    <p class="notice">实验室已于 2019 年 11 月中旬暂停对外开放。预约与邮件不再回复。站点内容保留，供查阅。</p>
 
-  <h2>最近笔记</h2>
-  <ul class="post-list">
-    <li>
-      <time>2019-11-03</time>
-      <a href="notes/2019-11-03.html">口令与白色</a>
-      <p>三段式口令的最后一段留在原始字节里。</p>
-    </li>
-    <li>
-      <time>2019-10-28</time>
-      <a href="notes/2019-10-28.html">回收率与白色记忆</a>
-      <p>未回收的记忆没有消失，它们和背景同色。</p>
-    </li>
-    <li>
-      <time>2019-10-12</time>
-      <a href="notes/2019-10-12.html">第 12 次记忆编码实验：开始</a>
-      <p>三名受试者复述出录音里不存在的一句话。</p>
-    </li>
-  </ul>
+    <h2>最近笔记</h2>
+    <ul class="post-list">
+      <li>
+        <time>2019-11-03</time>
+        <a href="notes/2019-11-03.html">口令与白色</a>
+        <p>三段式口令的最后一段留在原始字节里。</p>
+      </li>
+      <li>
+        <time>2019-10-28</time>
+        <a href="notes/2019-10-28.html">回收率与白色记忆</a>
+        <p>未回收的记忆没有消失，它们和背景同色。</p>
+      </li>
+      <li>
+        <time>2019-10-12</time>
+        <a href="notes/2019-10-12.html">第 12 次记忆编码实验：开始</a>
+        <p>三名受试者复述出录音里不存在的一句话。</p>
+      </li>
+    </ul>
 
-  <!-- 只在隐藏归档页解锁后出现 -->
-  <p class="ghost" id="lastPage">
-    你不是第 13 个。你是第 14 个。第 13 个已经进去了，就在你身后那间白色观察室里。
-    如果你读到这里，请不要回头。
-  </p>
-</main>
-    </main>
-<p class="ghost" id="lastPage">
-  第 14 次编码记录。受试者：正在读这行字的人。状态：进行中。回收率：0%。
-  第 13 号不是失踪。第 13 号是观察室。你选中了白色，你就进去了。
-</p>
-  <p class="ghost" style="font-size:.75rem;">
-  她不在找你。她在等下一个会选中这行字的人。
-</p>
+    <p class="ghost" id="lastPage">
+      你不是第 13 个。你是第 14 个。第 13 个已经进去了，就在你身后那间白色观察室里。
+      如果你读到这里，请不要回头。
+    </p>
+  </main>
+
   <footer>
     <p>© 2019 林晚 · 本站内容未经许可禁止转载</p>
   </footer>
 </div>
-<!-- TODO(linwan): 11-03 那篇先别设私密，等我把 vault 的密码改掉再说。 -->
-  <a class="raw-link" href="raw.html?file=index.html">原始档</a>
+<!-- TODO(linwan): 11-03 那篇先别设私密，等我把隐藏归档页的口令改掉再说。 -->
+<script>
+  (function () {
+    var opened = false;
+    try { opened = localStorage.getItem('vault_open') === '1'; } catch (e) {}
+    if (!opened) {
+      var el = document.getElementById('lastPage');
+      if (el) el.parentNode.removeChild(el);
+    }
+  })();
+</script>
 </body>
 </html>
